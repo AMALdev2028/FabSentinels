@@ -1,5 +1,9 @@
 # FabSentinel — AI-Driven Semiconductor Yield Prediction & Root-Cause Diagnostics
 
+[[Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fabsentinels.streamlit.app/)
+
+**Live app: [fabsentinels.streamlit.app](https://fabsentinels.streamlit.app/)**
+
 A working implementation of the system described in the patent specification
 *"AI-Driven System for Semiconductor Yield Prediction and Root-Cause Diagnostics
 for Semiconductor Fabrication."* Built on the SECOM dataset (the preferred
@@ -16,6 +20,13 @@ embodiment named in the spec).
 | Explainable AI Module (SHAP) | `src/train.py` (SHAP computation) + `src/dashboard.py` (display) |
 | Visualization and Decision Support Module | `src/dashboard.py` |
 
+## Try it now
+
+No setup needed — the trained model and dashboard are already deployed:
+**[https://fabsentinels.streamlit.app/](https://fabsentinels.streamlit.app/)**
+
+The sections below cover running it locally for development or retraining.
+
 ## Setup
 
 ```bash
@@ -29,16 +40,16 @@ Real SECOM data is already included in `data/secom.data` and `data/secom_labels.
 
 1. **Train the model** (runs the full pipeline: load → preprocess → cross-validate →
    train → SHAP → save artifacts):
-   ```bash
+```bash
    cd src
    python3 train.py
-   ```
+```
    This writes everything the dashboard needs into `artifacts/`.
 
 2. **Launch the dashboard**:
-   ```bash
+```bash
    streamlit run dashboard.py
-   ```
+```
    Opens at `http://localhost:8501` with four tabs: Yield Overview, High-Risk Lots,
    Root-Cause (SHAP), and Model Performance — matching the patent's Figure 5
    engineering dashboard.
