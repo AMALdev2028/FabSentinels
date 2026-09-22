@@ -42,7 +42,18 @@ def load_artifacts():
     return model, pre, explainer, test_set, shap_values, metrics
 
 
-model, pre, explainer, test_set, shap_values, metrics = load_artifacts()
+try:
+    model, pre, explainer, test_set, shap_values, metrics = load_artifacts()
+except FileNotFoundError as e:
+    st.error(
+        "**Missing model artifacts.** The dashboard needs a trained model before it can run.\n\n"
+        f"Could not find: `{e.filename}`\n\n"
+        "Run the training pipeline first:\n"
+        "```bash\ncd src\npython3 train.py\n```\n"
+        "This regenerates everything in `artifacts/` (model, preprocessor, SHAP explainer, "
+        "test-set predictions, metrics) that this dashboard reads."
+    )
+    st.stop()
 feature_cols = pre.kept_features_
 threshold_default = metrics["test"]["decision_threshold"]
 

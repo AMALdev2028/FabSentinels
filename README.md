@@ -33,6 +33,12 @@ The sections below cover running it locally for development or retraining.
 pip install -r requirements.txt
 ```
 
+Dependency versions are pinned (not just named) in `requirements.txt`, and the Python
+version is pinned in `.python-version` (3.11). This is so a redeploy six months from
+now installs the exact same library versions the model was trained and pickled with,
+instead of silently picking up a newer XGBoost/SHAP release that can't load an older
+pickle.
+
 Real SECOM data is already included in `data/secom.data` and `data/secom_labels.data`
 (1567 wafer lots, 590 raw sensors, from the public UCI SECOM dataset).
 
@@ -70,11 +76,30 @@ Real SECOM data is already included in `data/secom.data` and `data/secom_labels.
    SHAP root-cause breakdowns (both global and per-lot), and model performance
    stats, with an adjustable decision threshold.
 
+## Development
+
+A small smoke-test suite covers the preprocessing and training pipeline:
+
+```bash
+pip install pytest
+pytest tests/ -v
+```
+
+Run these after touching anything in `src/` and before retraining/redeploying —
+they catch the common failure mode of a preprocessing change silently breaking
+what the dashboard expects to load.
+
 ## Honest performance note
 
 SECOM is a small (1567 rows), highly imbalanced (~6.6% failure rate) real-world
 dataset — this is a known-hard benchmark, not a toy problem. With the F1-optimal
-threshold: **ROC-AUC ≈ 0.72, PR-AUC ≈ 0.16, recall ≈ 38%, precision ≈ 24%**. These
+threshold: **ROC-AUC ≈ 0.70, PR-AUC ≈ 0.16, recall ≈ 43%, precision ≈ 20%**. These
 numbers are in line with published SECOM results elsewhere. The dashboard's
 threshold slider lets you trade precision for recall live rather than being
 locked into one operating point.
+
+(`train.py` fixes `random_state=42` everywhere, so re-running it inside the exact
+pinned environment in `requirements.txt` reproduces these numbers exactly. Re-run
+it with different library versions, though, and expect small drift — same seed,
+different internal algorithm implementation. The checked-in `artifacts/metrics.json`
+is the source of truth; the dashboard's "Model Performance" tab always shows it live.)
