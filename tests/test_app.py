@@ -9,6 +9,7 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "src" / "views"))
 ENTRY = str(ROOT / "src" / "dashboard.py")
 

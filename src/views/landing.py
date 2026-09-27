@@ -19,20 +19,16 @@ from pathlib import Path
 
 import streamlit as st
 
+from views.style import ACCENT, TOKENS   # shared colours - edit views/style.py to re-theme every page
+
 # =============================================================================
-# CONFIG - change colours, copy and defaults here
+# CONFIG - change copy and defaults here (colours live in views/style.py)
 # =============================================================================
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = {
-    "accent": "#6D28D9",            # purple - matches .streamlit/config.toml primaryColor
-    "blob_2": "#3B82F6",            # background glow colours
-    "blob_3": "#8B5CF6",
-    "light": {"bg": "#F6F5F1", "ink": "#16181A", "muted": "#55585C", "line": "rgba(22,24,26,0.10)",
-              "glass": "rgba(255,255,255,0.55)", "glass_border": "rgba(255,255,255,0.75)",
-              "glass_hi": "rgba(255,255,255,0.95)", "die": "#D9D6CE", "blob_alpha": 0.30},
-    "dark":  {"bg": "#121314", "ink": "#EDEBE6", "muted": "#A3A19B", "line": "rgba(255,255,255,0.10)",
-              "glass": "rgba(32,33,36,0.55)", "glass_border": "rgba(255,255,255,0.10)",
-              "glass_hi": "rgba(255,255,255,0.08)", "die": "#3A3C3F", "blob_alpha": 0.24},
+    "accent": ACCENT,
+    "light": TOKENS["light"],
+    "dark": TOKENS["dark"],
     "wafer_grid": 16,               # dies per row/column in the illustrative wafer
     "flag_rate": 0.07,              # share of dies shown as flagged
     "scan_interval_s": 1.0,         # live wafer refresh period
@@ -91,36 +87,14 @@ def make_wafer(seed: int, n: int = CONFIG["wafer_grid"], rate: float = CONFIG["f
     return [rng.random() < rate for _ in range(n * n)]
 
 
-def hex_rgb(h: str) -> str:
-    h = h.lstrip("#")
-    return ", ".join(str(int(h[i:i + 2], 16)) for i in (0, 2, 4))
-
-
 # =============================================================================
-# Visualisation (HTML / CSS)
+# Visualisation (HTML / CSS) - page-specific rules; shared ones are in views/style.py
 # =============================================================================
 def css(t: dict, accent: str) -> str:
-    a = t["blob_alpha"]
     return f"""<style>
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap');
-:root {{ --bg:{t['bg']}; --ink:{t['ink']}; --muted:{t['muted']}; --line:{t['line']}; --accent:{accent};
-         --glass:{t['glass']}; --glass-border:{t['glass_border']}; --glass-hi:{t['glass_hi']}; }}
-/* page ground with the soft colour glows the glass blurs */
-.stApp {{
-  background:
-    radial-gradient(520px circle at 80% 22%, rgba({hex_rgb(accent)}, {a}), transparent 70%),
-    radial-gradient(380px circle at 62% 46%, rgba({hex_rgb(CONFIG['blob_2'])}, {a * 0.8}), transparent 70%),
-    radial-gradient(480px circle at 6% 78%, rgba({hex_rgb(CONFIG['blob_3'])}, {a * 0.7}), transparent 70%),
-    var(--bg);
-  background-attachment: fixed; color: var(--ink);
-}}
 header[data-testid="stHeader"] {{ display:none; }}           /* the glass nav replaces it on this page */
-.block-container {{ padding-top: 1rem; max-width: 1180px; }}
+.block-container {{ padding-top: 1rem; }}
 .stApp p, .stApp label, .stApp span {{ color: inherit; }}
-.glass, .st-key-nav {{
-  background: var(--glass); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-hi), 0 8px 32px rgba(0,0,0,0.08);
-}}
 .st-key-nav {{ position: sticky; top: 12px; z-index: 999; border-radius: 36px; padding: 6px 10px 6px 24px; }}
 .fs-brand {{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:17px; color:var(--ink); }}
 .fs-links {{ display:flex; gap:28px; font-size:14px; }}
@@ -137,11 +111,6 @@ header[data-testid="stHeader"] {{ display:none; }}           /* the glass nav re
 .st-key-cta_nav a p, .st-key-cta_end a p {{ color: var(--bg) !important; font-weight:500; }}
 .st-key-cta_hero a {{ background: var(--accent); padding: 0.8rem 1.6rem; }}
 .st-key-cta_hero a p {{ color: #FFFFFF !important; font-weight:500; font-size:15px; }}
-.stButton button, .stLinkButton a {{
-  border-radius: 26px; background: var(--glass) !important; color: var(--ink) !important;
-  border: 1px solid var(--glass-border) !important; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-}}
-.stButton button p, .stLinkButton a p {{ color: var(--ink) !important; }}
 .fs-eyebrow {{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }}
 .fs-h1 {{ font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:76px; line-height:1.02;
          letter-spacing:-.02em; margin:18px 0; color:var(--ink); }}

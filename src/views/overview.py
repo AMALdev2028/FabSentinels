@@ -21,6 +21,8 @@ import plotly.graph_objects as go
 import shap
 import streamlit as st
 
+from views.style import FAIL, PASS, style_fig   # shared chart colours
+
 ARTIFACT_DIR = Path(__file__).resolve().parents[2] / "artifacts"
 
 
@@ -55,12 +57,13 @@ except FileNotFoundError as e:
 feature_cols = pre.kept_features_
 threshold_default = metrics["test"]["decision_threshold"]
 
-st.title("🔬 FabSentinel")
+st.title("FabSentinel Dashboard")
 st.caption("Explainable AI system for semiconductor yield prediction and root-cause diagnostics "
            "— SECOM dataset, XGBoost + SHAP")
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Yield Overview", "🚨 High-Risk Lots", "🔍 Root-Cause (SHAP)", "📈 Model Performance"
+    ":material/insights: Yield Overview", ":material/warning: High-Risk Lots",
+    ":material/troubleshoot: Root-Cause (SHAP)", ":material/speed: Model Performance"
 ])
 
 # ---------------------------------------------------------------------------
@@ -90,25 +93,25 @@ with tab1:
     with col_a:
         st.markdown("**Failure probability distribution**")
         fig = px.histogram(test_set, x="pred_proba", nbins=40, color="true_label",
-                            color_discrete_map={0: "#4C78A8", 1: "#E45756"},
+                            color_discrete_map={0: PASS, 1: FAIL},
                             labels={"pred_proba": "Predicted failure probability", "true_label": "Actual outcome"})
-        fig.add_vline(x=threshold, line_dash="dash", line_color="black",
+        fig.add_vline(x=threshold, line_dash="dash", line_color="#55585C",
                       annotation_text="decision threshold")
         fig.for_each_trace(lambda t: t.update(name={"0": "Pass", "1": "Fail"}.get(t.name, t.name)))
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(style_fig(fig), width="stretch")
 
     with col_b:
         st.markdown("**Process trend — failure probability over time**")
         trend = test_set.sort_values("timestamp")
         fig2 = go.Figure()
         fig2.add_trace(go.Scatter(x=trend["timestamp"], y=trend["pred_proba"],
-                                   mode="markers+lines", line=dict(width=1),
+                                   mode="markers+lines", line=dict(width=1, color="rgba(22,24,26,0.18)"),
                                    marker=dict(size=6, color=trend["true_label"],
-                                               colorscale=[[0, "#4C78A8"], [1, "#E45756"]]),
+                                               colorscale=[[0, PASS], [1, FAIL]]),
                                    name="Predicted failure probability"))
-        fig2.add_hline(y=threshold, line_dash="dash", line_color="black")
+        fig2.add_hline(y=threshold, line_dash="dash", line_color="#55585C")
         fig2.update_layout(xaxis_title="Wafer lot timestamp", yaxis_title="Predicted failure probability")
-        st.plotly_chart(fig2, width="stretch")
+        st.plotly_chart(style_fig(fig2), width="stretch")
 
 # ---------------------------------------------------------------------------
 # TAB 2: High-risk lots + historical records
@@ -143,13 +146,13 @@ with tab3:
 
     fig3 = px.bar(importance_df.sort_values("mean_abs_shap"), x="mean_abs_shap", y="sensor",
                   orientation="h", labels={"mean_abs_shap": "Mean |SHAP value|", "sensor": "Sensor"})
-    fig3.update_layout(height=600)
-    st.plotly_chart(fig3, width="stretch")
+    fig3.update_traces(marker_color=FAIL)
+    st.plotly_chart(style_fig(fig3, height=600), width="stretch")
 
     st.divider()
     st.markdown("**Per-lot root-cause breakdown**")
     st.caption("Select a specific wafer lot to see which sensors pushed its prediction toward "
-               "failure (positive SHAP, red) or pass (negative SHAP, blue).")
+               "failure (positive SHAP, purple) or pass (negative SHAP, grey).")
 
     ranked_idx = test_set.sort_values("pred_proba", ascending=False).index
     idx = st.selectbox(
@@ -167,14 +170,14 @@ with tab3:
         "sensor_value_scaled": row_vals.values,
     }).sort_values("shap_value", key=np.abs, ascending=False).head(15)
 
-    fig4 = px.bar(contrib_df.sort_values("shap_value"), x="shap_value", y="sensor", orientation="h",
-                  color="shap_value", color_continuous_scale=["#4C78A8", "#E45756"],
+    contrib_df = contrib_df.sort_values("shap_value")
+    fig4 = px.bar(contrib_df, x="shap_value", y="sensor", orientation="h",
                   labels={"shap_value": "SHAP contribution to failure prediction", "sensor": "Sensor"})
-    fig4.update_layout(height=500, coloraxis_showscale=False)
-    st.plotly_chart(fig4, width="stretch")
+    fig4.update_traces(marker_color=[FAIL if v > 0 else PASS for v in contrib_df["shap_value"]])
+    st.plotly_chart(style_fig(fig4, height=500), width="stretch")
 
     st.info(f"This wafer lot's predicted failure probability is "
-            f"**{test_set.loc[idx, 'pred_proba']:.1%}**. Positive bars (red) are the sensors "
+            f"**{test_set.loc[idx, 'pred_proba']:.1%}**. Positive bars (purple) are the sensors "
             f"most responsible for pushing that risk up — the recommended starting point for "
             f"root-cause investigation.")
 
