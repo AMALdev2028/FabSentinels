@@ -1,0 +1,16 @@
+# Minimal look matching the FabSentinel landing page:
+# warm off-white ground, near-black ink, one purple accent, serif headings.
+[theme]
+base = "light"
+primaryColor = "#6D28D9"
+backgroundColor = "#F6F5F1"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#16181A"
+borderColor = "#E2E0DA"
+showWidgetBorder = true
+baseRadius = "12px"
+font = "IBM Plex Sans:https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap, sans-serif"
+headingFont = "Instrument Serif:https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap, serif"
+headingFontWeights = [400, 400, 400, 400, 400, 400]
+codeFont = "IBM Plex Mono:https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap, monospace"
+chartCategoricalColors = ["#6D28D9", "#C2410C", "#0F766E", "#1D4ED8", "#A3A19B"]

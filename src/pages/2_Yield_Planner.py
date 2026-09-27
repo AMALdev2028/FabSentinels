@@ -58,19 +58,28 @@ c[3].metric("Wafer starts needed", f"{f['required_wafer_starts'] or 0:,}", f"cap
 a, b = st.columns(2)
 with a:
     st.markdown("**Yield loss by mechanism (points)**")
-    st.bar_chart(pd.Series({k: v["loss_points"] for k, v in y["loss_breakdown"].items()}), horizontal=True)
+    st.bar_chart(pd.Series({k.replace("_", " ").capitalize(): v["loss_points"]
+                            for k, v in y["loss_breakdown"].items()}), horizontal=True)
     st.markdown("**Cycle time by module (days)**")
     st.bar_chart(pd.Series(t["critical_path"]["modules_days"]), horizontal=True)
 with b:
     st.markdown("**Sensitivity (tornado)**")
-    st.dataframe(pd.DataFrame(r["sensitivity"]["tornado"])[["parameter", "variation", "yield_at_low",
-                 "yield_at_high", "yield_swing_points"]], hide_index=True)
+    tor = pd.DataFrame(r["sensitivity"]["tornado"])
+    st.dataframe(pd.DataFrame({
+        "Parameter": tor["parameter"].str.replace("_", " ").str.capitalize(),
+        "Varied by": tor["variation"].str.replace("+-", "±"),
+        "Yield (low)": tor["yield_at_low"].map("{:.1%}".format),
+        "Yield (high)": tor["yield_at_high"].map("{:.1%}".format),
+        "Swing (pts)": tor["yield_swing_points"].round(1)}), hide_index=True)
     mc = r["sensitivity"]["monte_carlo"]
     st.caption(f"Monte Carlo 90% CI: {mc['yield']['p5']:.1%} – {mc['yield']['p95']:.1%}; "
                f"P(meet target) {mc['probability_meet_target']:.0%}")
     st.markdown("**Recommended improvements**")
-    st.dataframe(pd.DataFrame(r["recommendations"])[["name", "cost", "good_dies_gain_per_month", "action"]],
-                 hide_index=True)
+    rec = pd.DataFrame(r["recommendations"])
+    st.dataframe(pd.DataFrame({
+        "Improvement": rec["name"], "Cost": rec["cost"],
+        "Extra good dies / month": rec["good_dies_gain_per_month"].map("{:+,.0f}".format),
+        "What it means": rec["action"]}), hide_index=True)
 
 st.download_button("Download full result + audit trail (JSON)", json.dumps(r, indent=2, default=str),
                    "fabyield_result.json", "application/json")
