@@ -1,0 +1,13 @@
+{
+  "target_good_dies_per_month": 50000,
+  "die_width_mm": 25.0,
+  "die_height_mm": 32.0,
+  "wafer_diameter_mm": 300,
+  "process_node": "5nm",
+  "technology": "logic",
+  "yield_model": "negative_binomial",
+  "wafer_starts_capacity_per_month": 2500,
+  "edge_exclusion_mm": 3.0,
+  "scribe_um": 80,
+  "monte_carlo": {"samples": 5000, "seed": 42}
+}

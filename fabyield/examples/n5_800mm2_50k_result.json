@@ -1,0 +1,527 @@
+{
+  "engine_version": "1.0.0",
+  "inputs": {
+    "target_good_dies_per_month": 50000.0,
+    "die_width_mm": 25.0,
+    "die_height_mm": 32.0,
+    "wafer_diameter_mm": 300.0,
+    "process_node": "5nm",
+    "technology": "logic",
+    "yield_model": "negative_binomial",
+    "wafer_starts_capacity_per_month": 2500.0,
+    "max_cycle_time_days": null,
+    "edge_exclusion_mm": 3.0,
+    "scribe_um": 80.0,
+    "backside_power_delivery": false,
+    "mc_samples": 5000,
+    "mc_seed": 42,
+    "custom_node_file": null
+  },
+  "node": {
+    "name": "5nm (N5-class)",
+    "architecture": "FinFET, EUV on ~14 layers",
+    "d0_published": 0.1,
+    "sources": {
+      "d0": "TSMC-reported N5 D0 0.10-0.11/cm^2 during HVM ramp (AnandTech/ljdevice report of TSMC disclosure, 2020)",
+      "cycle_time": "~100 days / ~100 mask layers for 5nm (Semiconductor Engineering, 'Battling Fab Cycle Times'); X-factor calibrated to match",
+      "systematic_parametric": "modelling assumption: systematic share rises and parametric margin shrinks with scaling"
+    }
+  },
+  "yield": {
+    "overall_yield": 0.525268278314547,
+    "die_yield": 0.5349023702187705,
+    "defect_density_per_cm2": {
+      "total": 0.1,
+      "random": 0.07500000000000001,
+      "systematic": 0.025,
+      "by_source": {
+        "base_D0": 0.06999999999999999,
+        "litho": 0.009,
+        "etch": 0.0075,
+        "dep": 0.006,
+        "cmp": 0.004499999999999999,
+        "thermal": 0.0021000000000000003,
+        "implant": 0.0009,
+        "clean": 0.0,
+        "metrology": 0.0
+      }
+    },
+    "loss_breakdown": {
+      "random_defects": {
+        "yield": 0.674199862463242,
+        "standalone_loss_pct": 32.58001375367579,
+        "loss_points": 29.067947803073082
+      },
+      "systematic_defects": {
+        "yield": 0.8264462809917354,
+        "standalone_loss_pct": 17.355371900826455,
+        "loss_points": 14.055148551717032
+      },
+      "parametric": {
+        "yield": 0.96,
+        "standalone_loss_pct": 4.0000000000000036,
+        "loss_points": 3.0099575844758264
+      },
+      "wafer_edge": {
+        "yield": 0.9852941176470589,
+        "standalone_loss_pct": 1.4705882352941124,
+        "loss_points": 1.0923714127078663
+      },
+      "line_scrap": {
+        "yield": 0.9966456180517226,
+        "standalone_loss_pct": 0.33543819482774184,
+        "loss_points": 0.24774681657149022
+      }
+    },
+    "dies_on_wafer": 68,
+    "dies_usable": 67,
+    "good_dies_per_wafer_start": 35.7182429253892,
+    "good_dies_per_lot": 892.95607313473
+  },
+  "fabrication_time": {
+    "calendar_days": 100.03562973484846,
+    "raw_process_hours": 320.1140151515151,
+    "x_factor": 7.5,
+    "mask_layers": 100,
+    "days_per_mask_layer": 1.0003562973484845,
+    "process_steps": 403,
+    "critical_path": {
+      "note": "wafers pass modules strictly in sequence, so the whole flow is the critical path; modules/steps are ranked by their share of it",
+      "modules_days": {
+        "FEOL": 35.045572916666664,
+        "MOL": 9.20123106060606,
+        "BEOL": 55.78882575757577
+      },
+      "top_layers_days": {
+        "M5-M10 intermediate": 21.711647727272723,
+        "M1-M4 tight pitch": 14.211647727272728,
+        "M11-M14 semi-global": 11.163825757575758,
+        "Wells & Vt implants": 7.946022727272727,
+        "Replacement metal gate (HKMG)": 7.900094696969698
+      },
+      "step_categories_days": {
+        "dep": 27.84375,
+        "etch": 23.04166666666666,
+        "litho": 12.720525568181815,
+        "metrology": 10.213541666666668,
+        "clean": 9.770833333333334,
+        "thermal": 7.5,
+        "cmp": 5.570312500000001,
+        "implant": 3.375
+      }
+    },
+    "published_reference": {
+      "cycle_days": 100,
+      "mask_layers": 100
+    }
+  },
+  "feasibility": {
+    "verdict": "ACHIEVABLE",
+    "limiting_factors": [
+      "target met with margin on volume, cycle time and Monte Carlo confidence"
+    ],
+    "target_good_dies_per_month": 50000.0,
+    "achievable_good_dies_per_month": 89295.607313473,
+    "gap_good_dies_per_month": 39295.607313472996,
+    "wafer_starts_capacity": 2500.0,
+    "required_wafer_starts": 1400,
+    "required_overall_yield": 0.29411764705882354,
+    "achievable_overall_yield": 0.525268278314547,
+    "theoretical_max_yield": 0.9427095022512765,
+    "cycle_days": 100.03562973484846,
+    "max_cycle_days": 115,
+    "probability_meet_target": 1.0,
+    "required_defect_density": 0.1,
+    "bottlenecks": {
+      "yield_limiting_mechanism": "random_defects",
+      "yield_limiting_process_step": "litho",
+      "cycle_time_driver_step": "dep",
+      "cycle_time_driver_module": "BEOL"
+    }
+  },
+  "sensitivity": {
+    "tornado": [
+      {
+        "parameter": "defect_density",
+        "variation": "+-20%",
+        "yield_at_low": 0.5773010375338504,
+        "yield_at_high": 0.4811128162920391,
+        "good_dies_month_at_low": 98141.17638075456,
+        "good_dies_month_at_high": 81789.17876964665,
+        "yield_swing_points": 9.618822124181131,
+        "base_yield": 0.525268278314547,
+        "base_good_dies_month": 89295.607313473
+      },
+      {
+        "parameter": "die_area",
+        "variation": "+-10%",
+        "yield_at_low": 0.5583767560646126,
+        "yield_at_high": 0.4938940113076455,
+        "good_dies_month_at_low": 108883.46743259944,
+        "good_dies_month_at_high": 79023.04180922327,
+        "yield_swing_points": 6.448274475696708,
+        "base_yield": 0.525268278314547,
+        "base_good_dies_month": 89295.607313473
+      },
+      {
+        "parameter": "process_time",
+        "variation": "+-15%",
+        "yield_at_low": 0.5342414516395377,
+        "yield_at_high": 0.5167085313163681,
+        "good_dies_month_at_low": 90821.04677872141,
+        "good_dies_month_at_high": 87840.45032378257,
+        "yield_swing_points": 1.7532920323169665,
+        "base_yield": 0.525268278314547,
+        "base_good_dies_month": 89295.607313473
+      }
+    ],
+    "monte_carlo": {
+      "samples": 5000,
+      "seed": 42,
+      "distribution": "uniform within +-bounds",
+      "yield": {
+        "mean": 0.5295001223970206,
+        "std": 0.032023571733819776,
+        "p5": 0.4789620632939473,
+        "p50": 0.5286357028387417,
+        "p95": 0.5809960188169103,
+        "ci90": [
+          0.4789620632939473,
+          0.5809960188169103
+        ]
+      },
+      "good_dies_per_month": {
+        "mean": 91791.49830568902,
+        "p5": 77400.15923805107,
+        "p50": 90866.72450373424,
+        "p95": 108961.86399552821
+      },
+      "probability_meet_target": 1.0
+    }
+  },
+  "recommendations": [
+    {
+      "name": "Split into 2 chiplets",
+      "action": "re-architect as two half-area dies + advanced packaging (assumes 98% assembly yield)",
+      "cost": "HIGH",
+      "good_dies_gain_per_month": 30888.08195291704,
+      "yield_gain_points": 13.763127638148188,
+      "priority_score": 0.0345908190584159
+    },
+    {
+      "name": "DFM / OPC hotspot fixes",
+      "action": "remove 25% of systematic (layout-driven) defects",
+      "cost": "LOW",
+      "good_dies_gain_per_month": 2146.443903622596,
+      "yield_gain_points": 1.26261406095447,
+      "priority_score": 0.024037508318718145
+    },
+    {
+      "name": "Defect reduction program",
+      "action": "cut killer-defect density 10% (particle control, chamber seasoning, filtration)",
+      "cost": "MEDIUM",
+      "good_dies_gain_per_month": 4232.4993273496075,
+      "yield_gain_points": 2.4897054866762414,
+      "priority_score": 0.015799580198427837
+    },
+    {
+      "name": "Tighter edge control",
+      "action": "reduce edge exclusion 3 -> 2 mm (edge bead/bevel control)",
+      "cost": "MEDIUM",
+      "good_dies_gain_per_month": 2665.540516820067,
+      "yield_gain_points": 0.7839825049470783,
+      "priority_score": 0.00995024875621882
+    },
+    {
+      "name": "Advanced process control",
+      "action": "raise parametric yield by 1 point (run-to-run control, tighter Vt/CD targeting)",
+      "cost": "MEDIUM",
+      "good_dies_gain_per_month": 930.1625761820324,
+      "yield_gain_points": 0.5471544565776587,
+      "priority_score": 0.003472222222222304
+    },
+    {
+      "name": "Faster litho processing",
+      "action": "cut litho time 10% (the largest time-driven defect contributor)",
+      "cost": "HIGH",
+      "good_dies_gain_per_month": 187.81491754982562,
+      "yield_gain_points": 0.11047936326460395,
+      "priority_score": 0.0002103294027560614
+    }
+  ],
+  "audit": {
+    "assumptions": [
+      {
+        "text": "D0 at nominal flow = 0.1/cm^2 for 5nm (N5-class)",
+        "source": "TSMC-reported N5 D0 0.10-0.11/cm^2 during HVM ramp (AnandTech/ljdevice report of TSMC disclosure, 2020)"
+      },
+      {
+        "text": "30% of D0 is time-driven; k_i calibrated to reproduce D0 at nominal flow",
+        "source": "modelling assumption (docs/TECHNICAL.md s3)"
+      },
+      {
+        "text": "systematic share of D = 25%; parametric yield = 96.0%",
+        "source": "modelling assumption: systematic share rises and parametric margin shrinks with scaling"
+      },
+      {
+        "text": "X-factor 7.5 (cycle time / raw process time)",
+        "source": "~100 days / ~100 mask layers for 5nm (Semiconductor Engineering, 'Battling Fab Cycle Times'); X-factor calibrated to match"
+      },
+      {
+        "text": "technology 'logic': reference case - node D0 figures are quoted for logic test chips",
+        "source": "modelling assumption"
+      },
+      {
+        "text": "edge exclusion 3.0 mm, scribe 80.0 um",
+        "source": "typical 300 mm practice"
+      },
+      {
+        "text": "wafer starts capacity 2,500/month",
+        "source": "user input"
+      },
+      {
+        "text": "negative binomial cluster alpha = 0.5 (random) and 2.0 (systematic)",
+        "source": "specification"
+      },
+      {
+        "text": "litho: alpha=0.5, share=0.3 - overlay misalignment accumulates as a random walk over exposure passes: error ~ sqrt(N) ~ t^0.5",
+        "source": "step_library.json"
+      },
+      {
+        "text": "etch: alpha=1.0, share=0.25 - trench/profile non-uniformity and micro-loading grow roughly linearly with etch time",
+        "source": "step_library.json"
+      },
+      {
+        "text": "dep: alpha=1.0, share=0.2 - particle adders in the chamber scale with exposure time",
+        "source": "step_library.json"
+      },
+      {
+        "text": "cmp: alpha=1.0, share=0.15 - scratches, dishing and erosion scale with polish time",
+        "source": "step_library.json"
+      },
+      {
+        "text": "thermal: alpha=0.5, share=0.07 - dopant diffusion length L = sqrt(D*t): variance grows as t^0.5",
+        "source": "step_library.json"
+      },
+      {
+        "text": "implant: alpha=1.0, share=0.03 - damage/contamination per implant pass",
+        "source": "step_library.json"
+      },
+      {
+        "text": "clean: alpha=1.0, share=0.0 - removes defects; modelled as zero contribution",
+        "source": "step_library.json"
+      },
+      {
+        "text": "metrology: alpha=1.0, share=0.0 - non-destructive; zero contribution",
+        "source": "step_library.json"
+      }
+    ],
+    "calculation_steps": [
+      {
+        "step": "cycle_time",
+        "formula": "calendar_days = sum(hours_per_lot_i) * X_factor / 24",
+        "inputs": {
+          "raw_process_hours": 320.11,
+          "x_factor": 7.5
+        },
+        "result": 100.04,
+        "note": ""
+      },
+      {
+        "step": "k_calibration",
+        "formula": "k_i = D0_pub * f_time * share_i / T_i,nom^alpha_i",
+        "inputs": {
+          "D0_pub": 0.1,
+          "f_time": 0.3
+        },
+        "result": {
+          "litho": 0.00141064,
+          "etch": 0.000101718,
+          "dep": 6.73401e-05,
+          "cmp": 0.000252454,
+          "thermal": 0.000428661,
+          "implant": 8.33333e-05,
+          "clean": 0.0,
+          "metrology": 0.0
+        },
+        "note": ""
+      },
+      {
+        "step": "defect_density",
+        "formula": "D(t) = D0_base + sum_i k_i * t_i^alpha_i",
+        "inputs": {
+          "contributions_per_cm2": {
+            "base_D0": 0.07,
+            "litho": 0.009,
+            "etch": 0.0075,
+            "dep": 0.006,
+            "cmp": 0.0045,
+            "thermal": 0.0021,
+            "implant": 0.0009,
+            "clean": 0.0,
+            "metrology": 0.0
+          },
+          "hours_by_category": {
+            "litho": 40.71,
+            "implant": 10.8,
+            "clean": 31.27,
+            "thermal": 24.0,
+            "metrology": 32.68,
+            "dep": 89.1,
+            "etch": 73.73,
+            "cmp": 17.83
+          }
+        },
+        "result": 0.1,
+        "note": ""
+      },
+      {
+        "step": "defect_split",
+        "formula": "D_sys = D * f_sys * sys_mult; D_rand = D - D_sys",
+        "inputs": {
+          "D_raw": 0.1,
+          "d_scale": 1.0,
+          "tech_d_mult": 1.0,
+          "f_sys": 0.25
+        },
+        "result": {
+          "D_total": 0.1,
+          "D_random": 0.075,
+          "D_systematic": 0.025
+        },
+        "note": ""
+      },
+      {
+        "step": "random_defect_yield",
+        "formula": "negative_binomial(D_random, A), alpha=0.5",
+        "inputs": {
+          "D_random": 0.075,
+          "A_cm2": 8.0
+        },
+        "result": 0.6742,
+        "note": ""
+      },
+      {
+        "step": "systematic_defect_yield",
+        "formula": "negative_binomial(D_systematic, A), alpha=2.0",
+        "inputs": {
+          "D_systematic": 0.025,
+          "A_cm2": 8.0
+        },
+        "result": 0.826446,
+        "note": ""
+      },
+      {
+        "step": "parametric_yield",
+        "formula": "Y_param = node_param * tech_param_mult",
+        "inputs": {
+          "node": 0.96,
+          "tech_mult": 1.0
+        },
+        "result": 0.96,
+        "note": ""
+      },
+      {
+        "step": "die_count",
+        "formula": "exact grid layout, best of 4 offsets",
+        "inputs": {
+          "wafer_mm": 300.0,
+          "die_mm": [
+            25.0,
+            32.0
+          ],
+          "edge_exclusion_mm": 3.0,
+          "scribe_um": 80.0
+        },
+        "result": {
+          "dies_on_wafer": 68,
+          "dies_usable": 67,
+          "Y_edge": 0.985294
+        },
+        "note": ""
+      },
+      {
+        "step": "wafer_yield",
+        "formula": "good/wafer start = dies_on_wafer * Y_edge * Y_line * Y_rand * Y_sys * Y_param",
+        "inputs": {
+          "dies_on_wafer": 68,
+          "Y_edge": 0.985294,
+          "Y_line": 0.996646,
+          "Y_die": 0.534902
+        },
+        "result": {
+          "overall_yield": 0.525268,
+          "good_dies_per_wafer_start": 35.718
+        },
+        "note": ""
+      },
+      {
+        "step": "lot_yield",
+        "formula": "good/lot = good/wafer * lot_size",
+        "inputs": {
+          "lot_size": 25
+        },
+        "result": 892.96,
+        "note": ""
+      },
+      {
+        "step": "monthly_throughput",
+        "formula": "good/month = good_per_wafer_start * wafer_starts_capacity",
+        "inputs": {
+          "good_per_wafer": 35.718,
+          "capacity": 2500.0
+        },
+        "result": 89295.6,
+        "note": ""
+      },
+      {
+        "step": "monte_carlo",
+        "formula": "uniform draws: D +-20%, A +-10%, t +-15%",
+        "inputs": {
+          "samples": 5000,
+          "seed": 42
+        },
+        "result": {
+          "yield_p5": 0.47896,
+          "yield_p95": 0.581
+        },
+        "note": ""
+      },
+      {
+        "step": "required_yield",
+        "formula": "Y_req = target / (capacity * dies_on_wafer)",
+        "inputs": {
+          "target": 50000.0,
+          "capacity": 2500.0,
+          "dies_on_wafer": 68
+        },
+        "result": 0.29411764705882354,
+        "note": ""
+      },
+      {
+        "step": "required_wafer_starts",
+        "formula": "ceil(target / good_dies_per_wafer_start)",
+        "inputs": {
+          "target": 50000.0,
+          "good_per_wafer": 35.718
+        },
+        "result": 1400,
+        "note": ""
+      },
+      {
+        "step": "verdict",
+        "formula": "worst of all flagged conditions",
+        "inputs": {
+          "flags": [
+            [
+              "ACHIEVABLE",
+              "target met with margin on volume, cycle time and Monte Carlo confidence"
+            ]
+          ]
+        },
+        "result": "ACHIEVABLE",
+        "note": ""
+      }
+    ]
+  }
+}

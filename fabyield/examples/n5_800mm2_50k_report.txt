@@ -1,0 +1,37 @@
+FabYield 1.0.0 - 5nm (N5-class) (FinFET, EUV on ~14 layers), logic, negative_binomial
+Die 25.00 x 32.00 mm (800 mm^2) on 300 mm wafer
+
+VERDICT: ACHIEVABLE
+  - target met with margin on volume, cycle time and Monte Carlo confidence
+
+Overall yield 52.53%   (die yield 53.49%)
+D total 0.1000/cm^2  (random 0.0750, systematic 0.0250)
+Yield loss by mechanism (points of total loss):
+  random_defects       Y=0.6742  loss  29.07 pts
+  systematic_defects   Y=0.8264  loss  14.06 pts
+  parametric           Y=0.9600  loss   3.01 pts
+  wafer_edge           Y=0.9853  loss   1.09 pts
+  line_scrap           Y=0.9966  loss   0.25 pts
+Dies on wafer 68, usable 67, good/wafer start 35.72, good/lot 893.0
+
+Fabrication time 100.0 calendar days (100 masks, 1.00 d/mask; published ref 100 d)
+  Critical path by module: FEOL 35.0 d, MOL 9.2 d, BEOL 55.8 d
+
+Target 50,000 vs achievable 89,296 good dies/month (gap +39,296)
+Required wafer starts 1400 vs capacity 2,500; required yield 29.41% vs achievable 52.53% (zero-defect ceiling 94.27%)
+P(meet target) from Monte Carlo: 100.0%
+Bottlenecks: yield_limiting_mechanism=random_defects, yield_limiting_process_step=litho, cycle_time_driver_step=dep, cycle_time_driver_module=BEOL
+
+Sensitivity (tornado, yield swing):
+  defect_density   +-20%  57.73% .. 48.11%  (9.62 pts)
+  die_area         +-10%  55.84% .. 49.39%  (6.45 pts)
+  process_time     +-15%  53.42% .. 51.67%  (1.75 pts)
+Monte Carlo yield 90% CI: 47.90% .. 58.10%
+
+Recommended improvements (by impact / cost):
+  1. [HIGH] Split into 2 chiplets: +30,888 good dies/month - re-architect as two half-area dies + advanced packaging (assumes 98% assembly yield)
+  2. [LOW] DFM / OPC hotspot fixes: +2,146 good dies/month - remove 25% of systematic (layout-driven) defects
+  3. [MEDIUM] Defect reduction program: +4,232 good dies/month - cut killer-defect density 10% (particle control, chamber seasoning, filtration)
+  4. [MEDIUM] Tighter edge control: +2,666 good dies/month - reduce edge exclusion 3 -> 2 mm (edge bead/bevel control)
+  5. [MEDIUM] Advanced process control: +930 good dies/month - raise parametric yield by 1 point (run-to-run control, tighter Vt/CD targeting)
+  6. [HIGH] Faster litho processing: +188 good dies/month - cut litho time 10% (the largest time-driven defect contributor)
