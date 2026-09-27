@@ -1,0 +1,33 @@
+{
+  "_doc": "Shared step types. hours_per_lot = lot_size / throughput_wph + overhead_hours (or batch_hours for batch tools). Throughputs are nominal vendor-class figures; scrap rates are modelling assumptions (see docs/TECHNICAL.md s4).",
+  "steps": {
+    "litho_euv":  {"category": "litho",     "throughput_wph": 160, "overhead_hours": 0.35, "scrap_rate": 2e-5,
+                   "_source": "ASML NXE:3600D spec: 160 wph (asml.com); overhead = reticle change + track + lot setup (assumption)"},
+    "litho_duv":  {"category": "litho",     "throughput_wph": 275, "overhead_hours": 0.30, "scrap_rate": 1e-5,
+                   "_source": "ASML NXT:2000i-class immersion, ~275 wph nominal (asml.com DUV product line); overhead assumption"},
+    "etch":       {"category": "etch",      "throughput_wph": 30,  "overhead_hours": 0.10, "scrap_rate": 1e-5,
+                   "_source": "multi-chamber plasma etch cluster, assumption"},
+    "dep":        {"category": "dep",       "throughput_wph": 25,  "overhead_hours": 0.10, "scrap_rate": 1e-5,
+                   "_source": "blend of CVD/ALD/PVD cluster tools, assumption"},
+    "cmp":        {"category": "cmp",       "throughput_wph": 40,  "overhead_hours": 0.15, "scrap_rate": 2e-5,
+                   "_source": "multi-platen CMP, assumption"},
+    "thermal":    {"category": "thermal",   "batch_hours": 3.0,                          "scrap_rate": 1e-5,
+                   "_source": "vertical furnace / anneal batch incl. ramp, assumption"},
+    "implant":    {"category": "implant",   "throughput_wph": 20,  "overhead_hours": 0.10, "scrap_rate": 1e-5,
+                   "_source": "medium/high-current implanter, assumption"},
+    "clean":      {"category": "clean",     "throughput_wph": 60,  "overhead_hours": 0.05, "scrap_rate": 0,
+                   "_source": "single-wafer wet clean, assumption"},
+    "metrology":  {"category": "metrology", "throughput_wph": 30,  "overhead_hours": 0.05, "scrap_rate": 0,
+                   "_source": "CD-SEM / overlay / optical inspection, assumption"}
+  },
+  "defect_physics": {
+    "litho":     {"alpha": 0.5, "share": 0.30, "mechanism": "overlay misalignment accumulates as a random walk over exposure passes: error ~ sqrt(N) ~ t^0.5"},
+    "etch":      {"alpha": 1.0, "share": 0.25, "mechanism": "trench/profile non-uniformity and micro-loading grow roughly linearly with etch time"},
+    "dep":       {"alpha": 1.0, "share": 0.20, "mechanism": "particle adders in the chamber scale with exposure time"},
+    "cmp":       {"alpha": 1.0, "share": 0.15, "mechanism": "scratches, dishing and erosion scale with polish time"},
+    "thermal":   {"alpha": 0.5, "share": 0.07, "mechanism": "dopant diffusion length L = sqrt(D*t): variance grows as t^0.5"},
+    "implant":   {"alpha": 1.0, "share": 0.03, "mechanism": "damage/contamination per implant pass"},
+    "clean":     {"alpha": 1.0, "share": 0.0,  "mechanism": "removes defects; modelled as zero contribution"},
+    "metrology": {"alpha": 1.0, "share": 0.0,  "mechanism": "non-destructive; zero contribution"}
+  }
+}

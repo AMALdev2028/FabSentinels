@@ -97,7 +97,7 @@ with tab1:
         fig.add_vline(x=threshold, line_dash="dash", line_color="black",
                       annotation_text="decision threshold")
         fig.for_each_trace(lambda t: t.update(name={"0": "Pass", "1": "Fail"}.get(t.name, t.name)))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col_b:
         st.markdown("**Process trend — failure probability over time**")
@@ -110,7 +110,7 @@ with tab1:
                                    name="Predicted failure probability"))
         fig2.add_hline(y=threshold, line_dash="dash", line_color="black")
         fig2.update_layout(xaxis_title="Wafer lot timestamp", yaxis_title="Predicted failure probability")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
 # ---------------------------------------------------------------------------
 # TAB 2: High-risk lots + historical records
@@ -125,11 +125,11 @@ with tab2:
     ranked_display["Failure probability"] = ranked_display["Failure probability"].map(lambda x: f"{x:.1%}")
 
     n_show = st.number_input("Show top N lots", min_value=5, max_value=n_total, value=20, step=5)
-    st.dataframe(ranked_display.head(n_show), use_container_width=True, height=400)
+    st.dataframe(ranked_display.head(n_show), width="stretch", height=400)
 
     st.subheader("Historical Prediction Records")
     st.caption("Full evaluated test set — every wafer lot's prediction, for audit and trend review.")
-    st.dataframe(ranked_display, use_container_width=True, height=350)
+    st.dataframe(ranked_display, width="stretch", height=350)
 
 # ---------------------------------------------------------------------------
 # TAB 3: SHAP-based root-cause diagnostics
@@ -146,7 +146,7 @@ with tab3:
     fig3 = px.bar(importance_df.sort_values("mean_abs_shap"), x="mean_abs_shap", y="sensor",
                   orientation="h", labels={"mean_abs_shap": "Mean |SHAP value|", "sensor": "Sensor"})
     fig3.update_layout(height=600)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     st.divider()
     st.markdown("**Per-lot root-cause breakdown**")
@@ -173,7 +173,7 @@ with tab3:
                   color="shap_value", color_continuous_scale=["#4C78A8", "#E45756"],
                   labels={"shap_value": "SHAP contribution to failure prediction", "sensor": "Sensor"})
     fig4.update_layout(height=500, coloraxis_showscale=False)
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4, width="stretch")
 
     st.info(f"This wafer lot's predicted failure probability is "
             f"**{test_set.loc[idx, 'pred_proba']:.1%}**. Positive bars (red) are the sensors "

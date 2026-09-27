@@ -76,6 +76,27 @@ Real SECOM data is already included in `data/secom.data` and `data/secom_labels.
    SHAP root-cause breakdowns (both global and per-lot), and model performance
    stats, with an adjustable decision threshold.
 
+## Yield Planner (FabYield)
+
+A second page in the dashboard, **Yield Planner**, is a different kind of tool.
+FabSentinel *learns* failure risk from sensor data. FabYield *computes* yield from
+physics: defect density, die area, the process flow (7nm / 5nm / 3nm GAA) and
+fabrication time. It returns an ACHIEVABLE / MARGINAL / INFEASIBLE verdict for a
+monthly production target, with a yield-loss breakdown, cycle time, sensitivity
+analysis and ranked improvements.
+
+Code, tests and full documentation are in [`fabyield/`](fabyield/README.md). It also
+runs from the command line:
+
+```bash
+cd fabyield
+python -m fabyield examples/n5_800mm2_50k.json
+pytest                                   # 75 tests
+```
+
+Its numbers are estimates from public data plus stated assumptions (the 3nm values
+and the wafer-start capacity are assumptions). See `fabyield/docs/TECHNICAL.md`.
+
 ## Development
 
 A small smoke-test suite covers the preprocessing and training pipeline:
