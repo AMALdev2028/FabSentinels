@@ -17,8 +17,8 @@ embodiment named in the spec).
 | Data Preprocessing Module | `src/preprocessing.py` |
 | Feature Engineering (feature selection, part of preprocessing) | `src/preprocessing.py` |
 | Machine Learning Prediction Module + Model Validation | `src/train.py` |
-| Explainable AI Module (SHAP) | `src/train.py` (SHAP computation) + `src/dashboard.py` (display) |
-| Visualization and Decision Support Module | `src/dashboard.py` |
+| Explainable AI Module (SHAP) | `src/train.py` (SHAP computation) + `src/views/overview.py` (display) |
+| Visualization and Decision Support Module | `src/views/overview.py` (+ `src/views/landing.py` home page) |
 
 ## Try it now
 
@@ -52,13 +52,31 @@ Real SECOM data is already included in `data/secom.data` and `data/secom_labels.
 ```
    This writes everything the dashboard needs into `artifacts/`.
 
-2. **Launch the dashboard**:
+2. **Launch the app** (from the `src/` folder you're already in):
 ```bash
    streamlit run dashboard.py
 ```
-   Opens at `http://localhost:8501` with four tabs: Yield Overview, High-Risk Lots,
-   Root-Cause (SHAP), and Model Performance — matching the patent's Figure 5
-   engineering dashboard.
+   Opens at `http://localhost:8501` on the **Home** page. Use the top menu to reach
+   **Dashboard** (four tabs: Yield Overview, High-Risk Lots, Root-Cause (SHAP) and
+   Model Performance, matching the patent's Figure 5 engineering dashboard) and
+   **Yield Planner**.
+
+## App structure
+
+`src/dashboard.py` is the entry point. Streamlit Cloud runs it, and all it does is
+route between three pages:
+
+| Page | File | What it is |
+|---|---|---|
+| Home | `src/views/landing.py` | Landing page: glass navigation bar, hero with a live (illustrative) wafer map, dataset stats, an interactive "How it works", the stack, and team. Has a light/dark toggle and works on phones. |
+| Dashboard | `src/views/overview.py` | The ML dashboard (XGBoost + SHAP) |
+| Yield Planner | `src/views/yield_planner.py` | Physics-based yield / feasibility engine (see below) |
+
+**Customising the landing page:** colours, text, the wafer animation speed and links
+are all in the `CONFIG` block at the top of `src/views/landing.py`. The app-wide
+theme (background, accent colour, fonts) is in `.streamlit/config.toml`. The landing
+stats are read from `artifacts/metrics.json`. If that file is missing, the page shows
+the public SECOM figures and a notice instead of crashing.
 
 ## What the pipeline does
 

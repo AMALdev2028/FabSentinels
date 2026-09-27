@@ -1,6 +1,6 @@
 """Yield Planner page: runs the FabYield engine from the browser.
 
-Streamlit shows every file in src/pages/ as an extra page next to dashboard.py.
+Registered as a page in src/dashboard.py (the app router).
 """
 import json
 import sys
@@ -12,7 +12,6 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "fabyield"))
 from fabyield import ConfigError, YieldEngine, parse_run_config  # noqa: E402
 
-st.set_page_config(page_title="FabSentinel — Yield Planner", layout="wide")
 st.title("Yield Planner")
 st.caption("Deterministic yield, cycle-time and feasibility model (FabYield). "
            "Estimates from public data + stated assumptions — see fabyield/docs/TECHNICAL.md.")
